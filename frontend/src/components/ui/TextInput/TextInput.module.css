@@ -1,0 +1,57 @@
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text);
+  font-size: 1rem;
+  font-family: inherit;
+  line-height: 1.35;
+  min-height: 2.6rem;
+  cursor: text;
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: var(--focus-ring);
+  overflow: visible;
+}
+
+.input:empty::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.password {
+  -webkit-text-security: disc;
+  text-security: disc;
+  letter-spacing: 0.2em;
+}
+
+.password:empty::before {
+  letter-spacing: normal;
+  -webkit-text-security: none;
+  text-security: none;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: var(--surface-muted);
+}
+
+.invalid {
+  border-color: var(--danger);
+}
+
+.invalid:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}

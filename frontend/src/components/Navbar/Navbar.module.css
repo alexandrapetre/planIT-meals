@@ -1,0 +1,117 @@
+.navbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+@media (max-width: 767px) {
+  .navbar {
+    display: none;
+  }
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.brand:hover {
+  text-decoration: none;
+}
+
+.brandLogo {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.links {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.linksDesktopOnly {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+@media (max-width: 767px) {
+  .linksDesktopOnly {
+    display: none;
+  }
+}
+
+.link {
+  color: var(--text);
+  font-weight: 500;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.link:hover {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+.active {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+.userBadge {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+@media (max-width: 767px) {
+  .userBadge {
+    display: none;
+  }
+}
+
+.languageSelect {
+  min-width: 8rem;
+}
+
+@media (max-width: 480px) {
+  .languageSelect {
+    min-width: 6rem;
+  }
+}
+
+.registerButton {
+  margin-left: 0.25rem;
+}
+
+.logoutWrapper {
+  display: flex;
+}
+
+@media (max-width: 767px) {
+  .logoutWrapper {
+    display: none;
+  }
+}

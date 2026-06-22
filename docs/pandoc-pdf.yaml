@@ -1,0 +1,13 @@
+# Pandoc defaults for PDF export (xelatex + Unicode font)
+# Usage: pandoc --defaults=pandoc-pdf.yaml RAPORT_SEMESTRUL_3.md ... -o out.pdf
+from: markdown
+pdf-engine: xelatex
+variables:
+  geometry: margin=2.5cm
+  fontsize: 12pt
+  linestretch: 1.5
+  # macOS: Times New Roman supports RO diacritics and math symbols via fontspec
+  mainfont: "Times New Roman"
+  sansfont: "Helvetica"
+  monofont: "Menlo"
+  lang: ro

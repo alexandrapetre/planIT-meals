@@ -1,0 +1,53 @@
+.wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  line-height: 1.25;
+}
+
+.box {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex-shrink: 0;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 4px;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  position: relative;
+}
+
+.wrapper:hover .box {
+  border-color: var(--primary);
+}
+
+.wrapper:focus-visible .box {
+  box-shadow: var(--focus-ring);
+  border-color: var(--primary);
+  outline: none;
+}
+
+.checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.mark {
+  width: 0.6rem;
+  height: 0.35rem;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translate(1px, -1px);
+}
+
+.disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}

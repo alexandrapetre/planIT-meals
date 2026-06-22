@@ -1,0 +1,11 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.compact {
+  padding: 1rem 1.25rem;
+}

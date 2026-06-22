@@ -1,0 +1,41 @@
+.wrapper {
+  border-top: 1px dashed var(--border);
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  user-select: none;
+  color: var(--primary-dark);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0.15rem 0;
+  outline: none;
+}
+
+.summary:focus-visible {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.summary:hover {
+  text-decoration: underline;
+}
+
+.caret {
+  display: inline-block;
+  transition: transform 0.15s ease;
+  font-size: 0.75rem;
+}
+
+.open .caret {
+  transform: rotate(90deg);
+}
+
+.body {
+  margin-top: 0.5rem;
+}

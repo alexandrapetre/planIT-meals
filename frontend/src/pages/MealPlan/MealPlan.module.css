@@ -1,0 +1,234 @@
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.generatorCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+}
+
+.generatorTitle {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.generatorRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  align-items: end;
+}
+
+@media (max-width: 720px) {
+  .generatorRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.planList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.planCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.planHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.planName {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.planDates {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.planActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.daysGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.dayCard {
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+}
+
+.dayTitle {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  text-transform: capitalize;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dayTotal {
+  font-size: 0.75rem;
+  color: var(--primary-dark);
+  background: var(--primary-soft);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.mealList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+}
+
+.mealRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mealType {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mealBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.mealTitle {
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.mealTitleLink {
+  font-weight: 600;
+  color: var(--primary-dark);
+  line-height: 1.25;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 3px;
+  transition: color 120ms ease, text-decoration-color 120ms ease;
+  outline: none;
+}
+
+.mealTitleLink:hover,
+.mealTitleLink:focus-visible {
+  color: var(--primary);
+  text-decoration-color: currentColor;
+}
+
+.mealTitleLink:focus-visible {
+  box-shadow: 0 0 0 2px var(--primary-soft);
+  border-radius: 4px;
+}
+
+.mealCal {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.shoppingList {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--border);
+}
+
+.shoppingTitle {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.shoppingItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shoppingItem {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-muted);
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+}
+
+.shoppingName {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.shoppingQty {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.coveredList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-left: 1rem;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+
+.coveredList > div {
+  position: relative;
+}
+
+.coveredList > div::before {
+  content: '✓';
+  position: absolute;
+  left: -0.95rem;
+  color: var(--primary);
+  font-weight: 700;
+}

@@ -1,0 +1,31 @@
+.alert {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+
+.error {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger-soft-border);
+}
+
+.success {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+  border-color: var(--primary-soft-border);
+}
+
+.warning {
+  background: var(--warning-soft);
+  color: var(--warning);
+  border-color: #fde68a;
+}
+
+.info {
+  background: #eff6ff;
+  color: #1d4ed8;
+  border-color: #bfdbfe;
+}

@@ -1,0 +1,208 @@
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.formTitle {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .row3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sectionTitle {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+}
+
+.fridgeList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fridgeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+}
+
+.itemInfo {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.itemName {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.itemQty {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.fridgeItemExpired {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.fridgeItemSoon {
+  border-color: #fde68a;
+  background: #fffbeb;
+}
+
+.expires {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--warning);
+  background: var(--warning-soft);
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #fde68a;
+}
+
+.expiredBadge {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--danger);
+  background: #fee2e2;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #fecaca;
+}
+
+.expiryBanner {
+  margin-bottom: 1.25rem;
+}
+
+.suggestions {
+  margin-top: 2.5rem;
+}
+
+.suggestionsHeader {
+  margin-bottom: 0.25rem;
+}
+
+.suggestionsSubtitle {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.suggestionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.suggestionCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.suggestionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.suggestionTitle {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.matchBadge {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.suggestionSub {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.missingList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-left: 1rem;
+  font-size: 0.88rem;
+}
+
+.missingList > div {
+  position: relative;
+}
+
+.missingList > div::before {
+  content: '–';
+  position: absolute;
+  left: -0.85rem;
+  color: var(--muted);
+}
+
+.noMatch {
+  margin-top: 1.5rem;
+}

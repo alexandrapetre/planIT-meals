@@ -1,0 +1,13 @@
+.fieldset {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+}
+
+.legend {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.02em;
+}
