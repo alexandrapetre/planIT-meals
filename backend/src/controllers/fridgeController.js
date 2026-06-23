@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const FridgeItem = require('../models/FridgeItem');
 const Recipe = require('../models/Recipe');
+const { shoppingMergeContribution } = require('../utils/ingredientShoppingKey');
 
 // GET /api/fridge
 const getFridge = asyncHandler(async (req, res) => {
@@ -64,30 +65,58 @@ const deleteFridgeItem = asyncHandler(async (req, res) => {
 
 // GET /api/fridge/suggestions
 // Returns recipes ordered by how many ingredients are already in the fridge.
+// Uses unit conversion to match ingredients intelligently (e.g., cups to grams).
 const getSuggestions = asyncHandler(async (req, res) => {
   const fridgeItems = await FridgeItem.find({ user: req.user._id });
-  const fridgeNames = new Set(fridgeItems.map((i) => i.name.toLowerCase()));
 
-  if (fridgeNames.size === 0) {
+  if (fridgeItems.length === 0) {
     return res.json([]);
+  }
+
+  // Build a map of fridge items using the shopping merge key system
+  // This converts all quantities to base units (grams, ml, count, etc.)
+  const fridgeMap = new Map();
+  for (const item of fridgeItems) {
+    const { key, delta } = shoppingMergeContribution(
+      item.name,
+      item.quantity || 0,
+      item.unit || 'pcs'
+    );
+    fridgeMap.set(key, (fridgeMap.get(key) || 0) + delta);
   }
 
   const recipes = await Recipe.find();
   const scored = recipes
     .map((recipe) => {
       const total = recipe.ingredients.length || 1;
-      const owned = recipe.ingredients.filter((ing) =>
-        fridgeNames.has((ing.name || '').toLowerCase())
-      );
-      const missing = recipe.ingredients.filter(
-        (ing) => !fridgeNames.has((ing.name || '').toLowerCase())
-      );
+      let owned = 0;
+      const missing = [];
+
+      // Check each ingredient against fridge using merge keys
+      for (const ing of recipe.ingredients) {
+        const { key } = shoppingMergeContribution(
+          ing.name,
+          1, // just check if we have the ingredient at all
+          ing.unit || 'g'
+        );
+
+        if (fridgeMap.has(key)) {
+          owned += 1;
+        } else {
+          missing.push({
+            name: ing.name,
+            quantity: ing.quantity,
+            unit: ing.unit,
+          });
+        }
+      }
+
       return {
         recipe,
-        matchPercent: Math.round((owned.length / total) * 100),
-        ownedCount: owned.length,
+        matchPercent: Math.round((owned / total) * 100),
+        ownedCount: owned,
         missingCount: missing.length,
-        missing: missing.map((m) => ({ name: m.name, quantity: m.quantity, unit: m.unit })),
+        missing,
       };
     })
     .filter((s) => s.ownedCount > 0)

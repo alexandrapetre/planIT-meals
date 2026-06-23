@@ -46,6 +46,12 @@ interface GeneratePayload {
   days?: number;
 }
 
+interface SwapMealPayload {
+  planId: string;
+  dayIndex: number;
+  mealType: string;
+}
+
 export const generateMealPlan = createAsyncThunk<
   MealPlan,
   GeneratePayload,
@@ -70,6 +76,22 @@ export const deleteMealPlan = createAsyncThunk<string, string, { rejectValue: st
     }
   }
 );
+
+export const swapMealInPlan = createAsyncThunk<
+  MealPlan,
+  SwapMealPayload,
+  { rejectValue: string }
+>('mealPlans/swapMeal', async ({ planId, dayIndex, mealType }, thunkAPI) => {
+  try {
+    const { data } = await api.post<MealPlan>(`/meal-plans/${planId}/swap`, {
+      dayIndex,
+      mealType,
+    });
+    return data;
+  } catch (err) {
+    return thunkAPI.rejectWithValue(extractError(err, 'mealPlan.swapError'));
+  }
+});
 
 export const fetchShoppingList = createAsyncThunk<
   ShoppingList,
@@ -108,6 +130,18 @@ const mealPlanSlice = createSlice({
       .addCase(generateMealPlan.fulfilled, (state, action: PayloadAction<MealPlan>) => {
         state.items.unshift(action.payload);
         state.current = action.payload;
+      })
+      .addCase(swapMealInPlan.fulfilled, (state, action: PayloadAction<MealPlan>) => {
+        state.items = state.items.map((plan) =>
+          plan._id === action.payload._id ? action.payload : plan
+        );
+        if (state.current?._id === action.payload._id) {
+          state.current = action.payload;
+        }
+        delete state.shoppingLists[action.payload._id];
+      })
+      .addCase(swapMealInPlan.rejected, (state, action) => {
+        state.error = action.payload || 'common.error';
       })
       .addCase(deleteMealPlan.fulfilled, (state, action: PayloadAction<string>) => {
         state.items = state.items.filter((p) => p._id !== action.payload);

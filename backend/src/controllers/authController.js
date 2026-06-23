@@ -4,11 +4,16 @@ const generateToken = require('../utils/generateToken');
 
 // POST /api/auth/register
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, confirmPassword } = req.body;
 
-  if (!name || !email || !password) {
+  if (!name || !email || !password || !confirmPassword) {
     res.status(400);
     throw new Error('All fields are required.');
+  }
+
+  if (password !== confirmPassword) {
+    res.status(400);
+    throw new Error('Passwords do not match.');
   }
 
   const existing = await User.findOne({ email });

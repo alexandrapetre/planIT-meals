@@ -41,6 +41,8 @@
   "auth": {
     "email": "Email",
     "password": "Parolă",
+    "confirmPassword": "Reconfirmă parola",
+    "passwordMismatch": "Parolele nu coincid.",
     "name": "Nume",
     "sessionExpired": "Sesiune expirată. Autentifică-te din nou.",
     "login": {
@@ -194,6 +196,9 @@
     "dateRange": "{{start}} — {{end}}",
     "emptyRecipe": "—",
     "viewRecipe": "Vezi rețeta {{name}}",
+    "swap": "Schimbă",
+    "swapping": "Se schimbă...",
+    "swapAction": "Schimbă {{meal}} cu o altă rețetă",
     "coveredItem": "{{name}} — {{needed}} {{unit}}",
     "shoppingList": "Lista de cumpărături",
     "hideList": "Ascunde lista",
@@ -212,6 +217,7 @@
     "kcal": "kcal",
     "loadError": "Eroare la încărcarea planurilor",
     "generateError": "Eroare la generarea planului",
+    "swapError": "Eroare la schimbarea mesei",
     "deleteError": "Eroare la ștergere",
     "shoppingListError": "Eroare la generarea listei"
   },

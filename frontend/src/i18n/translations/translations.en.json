@@ -41,6 +41,8 @@
   "auth": {
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Re-confirm password",
+    "passwordMismatch": "Passwords do not match.",
     "name": "Name",
     "sessionExpired": "Session expired. Please sign in again.",
     "login": {
@@ -193,6 +195,9 @@
     "dateRange": "{{start}} — {{end}}",
     "emptyRecipe": "—",
     "viewRecipe": "View {{name}} recipe",
+    "swap": "Swap",
+    "swapping": "Swapping...",
+    "swapAction": "Swap {{meal}} with a different recipe",
     "coveredItem": "{{name}} — {{needed}} {{unit}}",
     "shoppingList": "Shopping list",
     "hideList": "Hide list",
@@ -211,6 +216,7 @@
     "kcal": "kcal",
     "loadError": "Failed to load meal plans",
     "generateError": "Failed to generate plan",
+    "swapError": "Failed to swap meal",
     "deleteError": "Failed to delete plan",
     "shoppingListError": "Failed to generate shopping list"
   },

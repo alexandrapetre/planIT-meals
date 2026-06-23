@@ -6,6 +6,7 @@ const {
   createMealPlan,
   generateMealPlan,
   updateMealPlan,
+  swapMealInPlan,
   deleteMealPlan,
   getShoppingList,
 } = require('../controllers/mealPlanController');
@@ -15,6 +16,7 @@ router.use(protect);
 
 router.route('/').get(getMealPlans).post(createMealPlan);
 router.post('/generate', generateMealPlan);
+router.post('/:id/swap', swapMealInPlan);
 router.get('/:id/shopping-list', getShoppingList);
 router.route('/:id').get(getMealPlanById).put(updateMealPlan).delete(deleteMealPlan);
 

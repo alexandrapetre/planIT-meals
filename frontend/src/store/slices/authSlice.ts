@@ -19,6 +19,7 @@ interface RegisterPayload {
   name: string;
   email: string;
   password: string;
+  confirmPassword: string;
 }
 
 const userFromStorage = localStorage.getItem('user');

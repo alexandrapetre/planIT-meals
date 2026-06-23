@@ -123,6 +123,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
+  min-width: 0;
 }
 
 .mealType {
@@ -137,12 +138,22 @@
   display: flex;
   flex-direction: column;
   gap: 0.1rem;
+  min-width: 0;
+}
+
+.mealTopRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .mealTitle {
   font-weight: 600;
   color: var(--text);
   line-height: 1.25;
+  min-width: 0;
 }
 
 .mealTitleLink {
@@ -150,6 +161,8 @@
   color: var(--primary-dark);
   line-height: 1.25;
   cursor: pointer;
+  min-width: 0;
+  overflow-wrap: anywhere;
   text-decoration: underline;
   text-decoration-color: transparent;
   text-underline-offset: 3px;
@@ -166,6 +179,23 @@
 .mealTitleLink:focus-visible {
   box-shadow: 0 0 0 2px var(--primary-soft);
   border-radius: 4px;
+}
+
+.mealTopRow :global([role='button']) {
+  flex-shrink: 0;
+}
+
+.swapButton {
+  width: 2rem;
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  line-height: 1;
 }
 
 .mealCal {

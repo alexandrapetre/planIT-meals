@@ -516,6 +516,22 @@ function waterQuantityToMl(qty, rawUnit) {
   return 0;
 }
 
+function oilVolMergeKey(b) {
+  if (!/\b(olive|vegetable|canola|sunflower|sesame|coconut|avocado|grapeseed|walnut|peanut|corn)\b/i.test(b)) return null;
+  if (!/\boil\b/i.test(b)) return null;
+  return 'oil';
+}
+
+/** All cooking oils: merge to one line; amounts in ml. */
+function oilQuantityToMl(qty, rawUnit) {
+  if (!qty) return 0;
+  if (isProseQuantityUnit(rawUnit)) return 0;
+  const u = aliasUnit(rawUnit);
+  if (VOL_TO_ML[u] !== undefined) return qty * VOL_TO_ML[u];
+  if (MASS_TO_G[u] !== undefined) return qty * MASS_TO_G[u];
+  return 0;
+}
+
 function pepperSpiceGramMergeKey(b) {
   if (/\bbell pepper\b|\bsweet pepper\b|\bcapsicum\b|\bpepperoni\b/.test(b)) return null;
   if (/\b(red|green|yellow|orange) pepper\b/.test(b)) return null;
@@ -849,20 +865,40 @@ function shoppingMergeContribution(rawName, rawQuantity, rawUnit) {
     };
   }
 
+  const oilKey = oilVolMergeKey(base);
+  if (oilKey) {
+    const ml = oilQuantityToMl(qty, rawUnit);
+    return {
+      key: `${oilKey}::VOL`,
+      delta: ml,
+      kind: 'oil',
+      displayUnit: 'ml',
+      canonicalDisplayName: 'Oil',
+    };
+  }
+
   const u = aliasUnit(rawUnit);
 
+  // For ANY ingredient not specially handled: normalize to base units
+  // Volume (cup, tbsp, ml) → convert to grams using generic produce density (~1g per ml)
+  // Mass (g, kg, oz, lb) → keep as grams
+  // This ensures "1 cup cabbage" and "200g cabbage" merge into one line
+  
   if (VOL_TO_ML[u] !== undefined) {
+    const ml = qty * VOL_TO_ML[u];
+    // Generic produce density: ~1 g/ml (rough average for vegetables)
+    const grams = ml * 1.0;
     return {
-      key: `${base}::VOL`,
-      delta: qty * VOL_TO_ML[u],
-      kind: 'vol',
-      displayUnit: 'ml',
+      key: `${base}::GRAMS`,
+      delta: grams,
+      kind: 'mass',
+      displayUnit: 'g',
     };
   }
 
   if (MASS_TO_G[u] !== undefined) {
     return {
-      key: `${base}::MASS`,
+      key: `${base}::GRAMS`,
       delta: qty * MASS_TO_G[u],
       kind: 'mass',
       displayUnit: 'g',
@@ -895,6 +931,7 @@ function formatQuantityForApi(kind, total, otherUnit) {
     }
     return { qty: rounded, unit: 'ml' };
   }
+  if (kind === 'oil') return { qty: rounded, unit: 'ml' };
   if (kind === 'vol') return { qty: rounded, unit: 'ml' };
   if (kind === 'mass') return { qty: rounded, unit: 'g' };
   if (kind === 'egg') return { qty: rounded, unit: 'egg' };
@@ -911,4 +948,10 @@ module.exports = {
   aliasUnit,
   titleCaseWords,
   formatQuantityForApi,
+  stripPrepSuffixFromUnit,
+  dryGoodsToGrams,
+  produceToGrams,
+  butterQuantityToGrams,
+  VOL_TO_ML,
+  MASS_TO_G,
 };

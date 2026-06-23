@@ -10,6 +10,7 @@ import { Alert, TextInput } from '../../components/ui';
 import type { MealType } from '../../types';
 import { getExpiredItems, getExpiringSoonItems } from '../../utils/fridgeExpiry';
 import { shuffleArray } from '../../utils/shuffleArray';
+import { isRecipeAllowed } from '../../utils/recipeAllowed';
 import styles from './Dashboard.module.css';
 
 type PreferenceIconKey =
@@ -90,8 +91,8 @@ export default function Dashboard() {
 
   const carouselShuffleKey = useMemo(() => Math.random(), []);
   const shuffledSuggestions = useMemo(
-    () => shuffleArray(suggestionItems),
-    [suggestionItems, carouselShuffleKey]
+    () => shuffleArray(suggestionItems.filter((r) => isRecipeAllowed(r, user?.preferences))),
+    [suggestionItems, user?.preferences, carouselShuffleKey]
   );
 
   useEffect(() => {

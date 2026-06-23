@@ -20,6 +20,7 @@ import {
   NumberInput,
   TextInput,
 } from '../../components/ui';
+import RecipeDetailModal from '../../components/RecipeDetailModal/RecipeDetailModal';
 import {
   getExpiredItems,
   getExpiringSoonItems,
@@ -45,6 +46,7 @@ export default function Fridge() {
     () => new Set()
   );
   const [removingExpiredId, setRemovingExpiredId] = useState<string | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchFridge());
@@ -235,9 +237,23 @@ export default function Fridge() {
           <p className={styles.suggestionsSubtitle}>{t('fridge.suggestionsSubtitle')}</p>
           <div className={styles.suggestionGrid}>
             {suggestions.map(({ recipe, matchPercent, ownedCount, missingCount, missing }) => (
-              <article key={recipe._id} className={styles.suggestionCard}>
+              <article
+                key={recipe._id}
+                className={styles.suggestionCard}
+              >
                 <header className={styles.suggestionHeader}>
-                  <h3 className={styles.suggestionTitle}>{recipe.title}</h3>
+                  <h3
+                    className={styles.suggestionTitle}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => setSelectedRecipe(recipe._id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setSelectedRecipe(recipe._id);
+                    }}
+                  >
+                    {recipe.title}
+                  </h3>
                   <span className={styles.matchBadge}>{matchPercent}%</span>
                 </header>
                 <p className={styles.suggestionSub}>
@@ -302,6 +318,12 @@ export default function Fridge() {
           })}
         </p>
       </Modal>
+
+      <RecipeDetailModal
+        recipeId={selectedRecipe}
+        open={selectedRecipe !== null}
+        onClose={() => setSelectedRecipe(null)}
+      />
     </div>
   );
 }

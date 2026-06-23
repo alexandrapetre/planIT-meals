@@ -15,6 +15,8 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [localError, setLocalError] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(clearError());
@@ -24,7 +26,14 @@ export default function Register() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const result = await dispatch(register({ name, email, password }));
+    setLocalError(null);
+
+    if (password !== confirmPassword) {
+      setLocalError(t('auth.passwordMismatch'));
+      return;
+    }
+
+    const result = await dispatch(register({ name, email, password, confirmPassword }));
     if (register.fulfilled.match(result)) {
       navigate('/');
     }
@@ -55,13 +64,29 @@ export default function Register() {
         <FormField label={t('auth.password')} required>
           <TextInput
             value={password}
-            onChange={setPassword}
+            onChange={(value) => {
+              setPassword(value);
+              setLocalError(null);
+            }}
             variant="password"
             ariaLabel={t('auth.password')}
           />
         </FormField>
+        <FormField label={t('auth.confirmPassword')} required>
+          <TextInput
+            value={confirmPassword}
+            onChange={(value) => {
+              setConfirmPassword(value);
+              setLocalError(null);
+            }}
+            variant="password"
+            ariaLabel={t('auth.confirmPassword')}
+          />
+        </FormField>
 
-        {error && <Alert variant="error">{t(error)}</Alert>}
+        {(localError || error) && (
+          <Alert variant="error">{localError || t(error)}</Alert>
+        )}
 
         <Button type="submit" variant="primary" disabled={isLoading} block>
           {isLoading ? t('auth.register.loading') : t('auth.register.button')}

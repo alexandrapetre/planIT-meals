@@ -6,6 +6,7 @@ import {
   fetchMealPlans,
   fetchShoppingList,
   generateMealPlan,
+  swapMealInPlan,
 } from '../../store/slices/mealPlanSlice';
 import type { MealType, Recipe } from '../../types';
 import {
@@ -32,6 +33,7 @@ export default function MealPlan() {
   const [startDate, setStartDate] = useState(() => todayLocalDateKey());
   const [expandedPlanId, setExpandedPlanId] = useState<string | null>(null);
   const [detailRecipeId, setDetailRecipeId] = useState<string | null>(null);
+  const [swappingMealKey, setSwappingMealKey] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchMealPlans());
@@ -45,6 +47,17 @@ export default function MealPlan() {
     const willExpand = expandedPlanId !== planId;
     setExpandedPlanId(willExpand ? planId : null);
     if (willExpand) {
+      dispatch(fetchShoppingList(planId));
+    }
+  };
+
+  const handleSwapMeal = async (planId: string, dayIndex: number, mealType: MealType) => {
+    const mealKey = `${planId}:${dayIndex}:${mealType}`;
+    setSwappingMealKey(mealKey);
+    const result = await dispatch(swapMealInPlan({ planId, dayIndex, mealType }));
+    setSwappingMealKey(null);
+
+    if (swapMealInPlan.fulfilled.match(result) && expandedPlanId === planId) {
       dispatch(fetchShoppingList(planId));
     }
   };
@@ -164,27 +177,43 @@ export default function MealPlan() {
                             >
                               <span className={styles.mealType}>{mealLabel(meal.type)}</span>
                               <div className={styles.mealBody}>
-                                {recipe ? (
-                                  <div
-                                    role="button"
-                                    tabIndex={0}
-                                    className={styles.mealTitleLink}
-                                    onClick={() => setDetailRecipeId(recipe._id)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter' || e.key === ' ') {
-                                        e.preventDefault();
-                                        setDetailRecipeId(recipe._id);
-                                      }
-                                    }}
-                                    aria-label={t('mealPlan.viewRecipe', { name: recipe.title })}
-                                  >
-                                    {recipe.title}
-                                  </div>
-                                ) : (
-                                  <span className={styles.mealTitle}>
-                                    {t('mealPlan.emptyRecipe')}
-                                  </span>
-                                )}
+                                <div className={styles.mealTopRow}>
+                                  {recipe ? (
+                                    <div
+                                      role="button"
+                                      tabIndex={0}
+                                      className={styles.mealTitleLink}
+                                      onClick={() => setDetailRecipeId(recipe._id)}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                          e.preventDefault();
+                                          setDetailRecipeId(recipe._id);
+                                        }
+                                      }}
+                                      aria-label={t('mealPlan.viewRecipe', { name: recipe.title })}
+                                    >
+                                      {recipe.title}
+                                    </div>
+                                  ) : (
+                                    <span className={styles.mealTitle}>
+                                      {t('mealPlan.emptyRecipe')}
+                                    </span>
+                                  )}
+                                  {recipe && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className={styles.swapButton}
+                                      onClick={() => handleSwapMeal(plan._id, idx, meal.type)}
+                                      disabled={swappingMealKey === `${plan._id}:${idx}:${meal.type}`}
+                                      ariaLabel={t('mealPlan.swapAction', { meal: recipe.title })}
+                                    >
+                                      {swappingMealKey === `${plan._id}:${idx}:${meal.type}`
+                                        ? '...'
+                                        : '↻'}
+                                    </Button>
+                                  )}
+                                </div>
                                 {recipe && (
                                   <span className={styles.mealCal}>
                                     {perServingKcal} {t('mealPlan.kcal')}

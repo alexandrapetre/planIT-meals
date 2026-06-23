@@ -3,7 +3,7 @@ const MealPlan = require('../models/MealPlan');
 const Recipe = require('../models/Recipe');
 const FridgeItem = require('../models/FridgeItem');
 const MealLog = require('../models/MealLog');
-const { generatePlanDays } = require('../services/aiPlanner');
+const { generatePlanDays, pickSwapCandidate } = require('../services/aiPlanner');
 const { formatQuantityForApi } = require('../utils/ingredientShoppingKey');
 const {
   aggregateNeededFromPlan,
@@ -79,7 +79,7 @@ const generateMealPlan = asyncHandler(async (req, res) => {
     .filter(Boolean);
 
   const fridgeItems = await FridgeItem.find({ user: req.user._id }).select(
-    'name'
+    'name quantity unit'
   );
 
   const result = generatePlanDays({
@@ -125,6 +125,72 @@ const updateMealPlan = asyncHandler(async (req, res) => {
   }
   Object.assign(plan, req.body);
   const updated = await plan.save();
+  res.json(updated);
+});
+
+// POST /api/meal-plans/:id/swap
+// Replaces one meal in an existing plan with another allowed recipe that is
+// not already present anywhere else in that plan.
+const swapMealInPlan = asyncHandler(async (req, res) => {
+  const { dayIndex, mealType } = req.body;
+  const parsedDayIndex = Number(dayIndex);
+
+  if (!Number.isInteger(parsedDayIndex) || parsedDayIndex < 0 || !mealType) {
+    res.status(400);
+    throw new Error('dayIndex and mealType are required.');
+  }
+
+  const plan = await MealPlan.findById(req.params.id).populate({
+    path: 'days.meals.recipe',
+    select: 'title category area tags calories servings prepTime cookTime ingredients imageUrl',
+  });
+  if (!plan || plan.user.toString() !== req.user._id.toString()) {
+    res.status(404);
+    throw new Error('Meal plan not found.');
+  }
+
+  const recipes = await Recipe.find({
+    calories: { $gt: 0 },
+    servings: { $gt: 0 },
+  }).select('_id title category area tags calories servings prepTime cookTime ingredients imageUrl');
+
+  const fourteenDaysAgo = new Date();
+  fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+  const recentLogs = await MealLog.find({
+    user: req.user._id,
+    createdAt: { $gte: fourteenDaysAgo },
+    recipe: { $ne: null },
+  }).select('recipe');
+  const recentLogIds = recentLogs.map((log) => log.recipe).filter(Boolean);
+
+  const fridgeItems = await FridgeItem.find({ user: req.user._id }).select(
+    'name quantity unit'
+  );
+
+  const result = pickSwapCandidate({
+    user: req.user,
+    recipes,
+    fridgeItems,
+    recentLogIds,
+    plan,
+    dayIndex: parsedDayIndex,
+    mealType,
+  });
+
+  if (result.error) {
+    res.status(400);
+    throw new Error(result.error);
+  }
+
+  const day = plan.days[parsedDayIndex];
+  const meal = day.meals.find((entry) => entry.type === mealType);
+  meal.recipe = result.recipe._id;
+  await plan.save();
+
+  const updated = await MealPlan.findById(plan._id).populate({
+    path: 'days.meals.recipe',
+    select: 'title calories servings imageUrl category area tags prepTime cookTime ingredients',
+  });
   res.json(updated);
 });
 
@@ -191,7 +257,7 @@ const getShoppingList = asyncHandler(async (req, res) => {
     planId: plan._id,
     planName: plan.name,
     items: shoppingList.filter((i) => i.missing > 0),
-    alreadyCovered: shoppingList.filter((i) => i.missing === 0),
+    alreadyCovered: shoppingList.filter((i) => i.missing === 0 && i.needed > 0),
   });
 });
 
@@ -201,6 +267,7 @@ module.exports = {
   createMealPlan,
   generateMealPlan,
   updateMealPlan,
+  swapMealInPlan,
   deleteMealPlan,
   getShoppingList,
 };
